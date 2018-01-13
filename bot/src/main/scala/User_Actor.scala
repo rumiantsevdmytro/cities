@@ -34,8 +34,7 @@ class User_Actor extends Actor {
   }
 
   def Unique(name:String):Boolean = {
-    val proper_name = name
-    !(currentGame.exists(x=>x==proper_name))||(currentGame==List())
+    !(currentGame.exists(x=>x==name))||(currentGame==List())
   }
 
   def receive = {
@@ -73,8 +72,8 @@ class User_Actor extends Actor {
                   currentGame = value::currentGame
                   letter = lastLetter(value)
 
-                  val currentGameJson:String = currentGame.map(x=>URLEncoder.encode(x, "UTF-8").replace("+", "%20")).
-                    filter{x=>x.startsWith(letter)}.asJson.toString()
+                  val currentGameJson:String = currentGame.filter{x=>x.startsWith(letter)}
+                   .map(x=>URLEncoder.encode(x, "UTF-8").replace("+", "%20")).asJson.toString()
                   val letterUTF = URLEncoder.encode(letter, "UTF-8")
                   val request = s"http://localhost:8080/town/$letterUTF/$language"
                   val city = Http(request).postData(currentGameJson).header("content-type", "application/json").asString.body
