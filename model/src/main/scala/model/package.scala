@@ -1,7 +1,7 @@
 import io.circe._
 import io.circe.generic.JsonCodec
 import io.circe.syntax._
-import io.circe.generic.semiauto._
+
 package object model {
   @JsonCodec
   case class City(id: Long=0L, country: String, city: String, language: String)

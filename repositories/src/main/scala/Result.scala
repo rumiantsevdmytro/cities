@@ -3,10 +3,7 @@ import slick.jdbc.PostgresProfile.api._
 import slick.lifted.Tag
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import scala.util.{Success, Try}
-
-
-
+import scala.util.{Success}
 
 class ResultTable(tag: Tag) extends Table[Result](tag, "results") {
   val id = column[Long]("id", O.PrimaryKey, O.AutoInc)
@@ -27,25 +24,27 @@ class ResultRepository(db: Database) {
 
   def rank() = db.run(resultTableQuery.filter(_.publish==="Yes").sortBy(_.result.desc).map(i=>(i.user, i.result)).
     take(5).result)
+
   def add(user: String, userID:String, result: Long) ={
-  val f = db.run(resultTableQuery.filter(_.userID===userID).exists.result)
-   f onComplete {
+     db.run(resultTableQuery.filter(_.userID===userID).exists.result) onComplete {
      case Success(true) =>
         val currentMaxResult = db.run(resultTableQuery.filter(_.userID===userID).map(_.result).result) onComplete {
           case Success(currentMaxResult) => {
             if (currentMaxResult(0)<result){
               db.run(resultTableQuery.filter(_.userID===userID).map(_.result).update(result))
-            }}
+          }}
           case _ => {}}
      case _ =>  db.run(resultTableQuery += Result(0L, user, userID, result, "No"))
-   }}
-   def publish(userID: String) ={
-     val f = db.run(resultTableQuery.filter(_.userID===userID).exists.result)
-     f onComplete {
+     }
+  }
+
+  def publish(userID: String) ={
+     db.run(resultTableQuery.filter(_.userID===userID).exists.result) onComplete {
        case Success(true) =>
          db.run(resultTableQuery.filter(_.userID===userID).map(_.publish).update("Yes"))
        case _ =>  {}
-     }}
-   }
+     }
+  }
+}
 
 

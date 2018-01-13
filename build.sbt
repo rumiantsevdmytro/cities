@@ -37,8 +37,7 @@ val api = Project("api", file("api"))
       "com.typesafe.akka" %% "akka-http" % "10.0.11",
       "com.typesafe.akka" %% "akka-http-testkit" % "10.0.11" % Test,
       "de.heikoseeberger" %% "akka-http-circe" % "1.18.0",
-      "com.nrinaudo" %% "kantan.csv" % "0.3.1",
-      "com.nrinaudo" %% "kantan.csv-generic" % "0.3.1")
+      "com.github.tototoshi" %% "scala-csv" % "1.3.4")
   )
 
 

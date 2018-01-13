@@ -9,7 +9,7 @@ object WebServer extends ApiRoute {
     implicit val materializer = ActorMaterializer()
     implicit val executionContext = system.dispatcher
     //init()
-    //fillDB(rawData)
+    //fillDB(fileList)
     val bindingFuture = Http().bindAndHandle(routes, "localhost", 8080)
     println("Server started!")
     StdIn.readLine()
